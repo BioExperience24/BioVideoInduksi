@@ -1,0 +1,208 @@
+@page
+@model CleanArchitecture.Frontend.Pages.Media.Media
+
+@{
+    ViewData["Title"] = "Media";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalShow">Create</button>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Size (Mb)</th>
+            <th>Duration</th>
+            <th class="text-center">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Items != null && Model.Items.Any())
+        {
+            @foreach (var itemMedia in Model.Items.Select((value, index) => new { index, value }))
+            {
+                <tr>
+                    <td>@(itemMedia.index + 1)</td>
+                    <td>@itemMedia.value.Name</td>
+                    <td>@itemMedia.value.MediaType</td>
+                    <td>@itemMedia.value.Size</td>
+                    <td>@itemMedia.value.Duration</td>
+                    <td class="text-center">
+                        <button class="btn btn-primary" onclick="editMedia(@itemMedia.value.Id)">Edit</button>
+                        <button class="btn btn-danger" onclick="deleteMedia(@itemMedia.value.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">No media found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal fade" id="modalShow" tabindex="-1" role="dialog" aria-labelledby="modalShowLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalShowLabel">Create Media</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createMediaForm">
+                    <input type="hidden" id="mediaId">
+                    <div class="form-group mb-3">
+                        <label for="mediaName">Name</label>
+                        <input type="text" class="form-control" id="mediaName" placeholder="Enter media name" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="mediaFile">File</label>
+                        <input type="file" class="form-control" id="mediaFile" required>
+                    </div>
+                    <div class="show-media"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveMedia()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const baseUrlApi = '@ViewData["BaseUrlApi"]';
+
+        function deleteMedia(mediaId) {
+            swal({
+                title: "Delete Media",
+                text: "Are you sure you want to delete this media?",
+                icon: "warning",
+                buttons: ["Cancel", "Ok"],
+                dangerMode: true
+            }).then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: `${baseUrlApi}/Media?id=${mediaId}`, // Endpoint API for delete
+                        type: 'DELETE',
+                        beforeSend: function () {
+                            swal({
+                                title: 'Please wait...',
+                                text: 'Deleting media...',
+                                buttons: false,
+                                closeOnClickOutside: false,
+                                closeOnEsc: false
+                            });
+                        },
+                        success: function (res, textStatus, xhr) {
+                            if (xhr.status == 204) {
+                                swal("Deleted!", "Media has been deleted.", "success").then(() => {
+                                    location.reload();
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error deleting media:", error);
+                            alert('Failed to delete media. Please try again.');
+                        }
+                    });
+                }
+            })
+        }
+
+        function showMedia(result) {
+            $('#mediaName').val(result.name);
+            $('#mediaId').val(result.id);
+
+            if (result.mediaType == "Image") {
+                let content = `<img src="${result.path}" class="img-fluid">`;
+                $('.show-media').html(content);
+            } else if (result.mediaType == "Video") {
+                let content = `<video controls style="width: 100%"><source src="${result.path}" type="video/mp4"></video>`;
+                $('.show-media').html(content);
+            }
+
+            $('#modalShow').modal('show');
+            $('#modalShowLabel').text('Edit Media');
+        }
+
+        function editMedia(mediaId) {
+            $.ajax({
+                url: `${baseUrlApi}/Media/${mediaId}`,
+                type: 'GET',
+                beforeSend: function () {
+                    swal({
+                        title: 'Please wait...',
+                        text: 'Fetching media...',
+                        buttons: false,
+                        closeOnClickOutside: false,
+                        closeOnEsc: false
+                    });
+                },
+                success: function (res, textStatus, xhr) {
+                    if (xhr.status == 200) {
+                        swal.close();
+                        showMedia(res);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error editing media:", error);
+                }
+            });
+        }
+
+        function saveMedia() {
+            let mediaName = $('#mediaName').val();
+            let mediaFile = $('#mediaFile')[0].files[0];
+            let id = $('#mediaId').val();
+            let method = 'POST';
+            let formData = new FormData();
+
+            if (id != '') {
+                formData.append("Id", id);
+                method = 'PUT';
+            }
+
+            formData.append("Name", mediaName);
+            formData.append("MediaFile", mediaFile);
+
+            submitFormData(formData, `${baseUrlApi}/Media`, method);
+        }
+
+        function submitFormData(formData, url, method) {
+            $.ajax({
+                url: url,
+                type: method,
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    swal({
+                        title: 'Please wait...',
+                        text: 'Saving media...',
+                        buttons: false,
+                        closeOnClickOutside: false,
+                        closeOnEsc: false
+                    });
+                },
+                success: function (res, textStatus, xhr) {
+                    if (xhr.status == 200) {
+                        swal("Saved!", "Media has been saved.", "success").then(() => {
+                            location.reload();
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error saving media:", error);
+                }
+            });
+        }
+    </script>
+}

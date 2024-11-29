@@ -1,0 +1,9 @@
+CleanArchitecture/bin
+CleanArchitecture/obj
+CleanArchitecture.Frontend/bin
+CleanArchitecture.Frontend/obj
+CleanArchitecture/appsettings.Development.json
+CleanArchitecture/appsettings.json
+CleanArchitecture/appsettings.docker.json
+/obj
+CleanArchitecture.Frontend/Properties/launchSettings.json
