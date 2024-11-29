@@ -6,6 +6,7 @@ public interface IUnitOfWork
 {
     IUserRepository UserRepository { get; }
     IMediaRepository MediaRepository { get; }
+    ITemplateRepository TemplateRepository { get; }
 
     /// <summary>
     /// Saves changes to the database. This is called when the user changes the data or saves a new version of the data.

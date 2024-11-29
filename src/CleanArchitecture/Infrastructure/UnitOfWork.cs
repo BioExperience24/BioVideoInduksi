@@ -20,12 +20,15 @@ public class UnitOfWork : IUnitOfWork
 
     public IMediaRepository MediaRepository { get; }
 
+    public ITemplateRepository TemplateRepository { get; }
+
     public UnitOfWork(ApplicationDbContext dbContext)
     {
         _context = dbContext;
         // repositories
         UserRepository = new UserRepository(_context);
         MediaRepository = new MediaRepository(_context);
+        TemplateRepository = new TemplateRepository(_context);
     }
 
     // save changes

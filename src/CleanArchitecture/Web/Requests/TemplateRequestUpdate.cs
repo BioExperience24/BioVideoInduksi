@@ -3,13 +3,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace CleanArchitecture.Web.Requests;
 
-public class MediaRequestUpdate
+public class TemplateRequestUpdate
 {
     [Required]
     public int Id { get; set; }
 
     [Required]
     public string Name { get; set; } = null!;
-
-    public IFormFile? MediaFile { get; set; }
 }

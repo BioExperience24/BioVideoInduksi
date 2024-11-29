@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CleanArchitecture.Infrastructure.Data.Configurations;
 
-public class TemplateConfiguration : IEntityTypeConfiguration<Template>
+public class SignageConfiguration : IEntityTypeConfiguration<Signage>
 {
-    public void Configure(EntityTypeBuilder<Template> builder)
+    public void Configure(EntityTypeBuilder<Signage> builder)
     {
-        builder.ToTable("Templates");
+        builder.ToTable("Signages");
 
         //Id
         builder.HasKey(x => x.Id);

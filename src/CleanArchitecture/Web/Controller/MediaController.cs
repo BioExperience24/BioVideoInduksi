@@ -7,18 +7,14 @@ using FluentValidation;
 
 namespace CleanArchitecture.Web.Controller;
 
-public class MediaController(
-    IMediaService mediaService,
-    IFileUploadService fileUploadService,
-    IConfiguration configuration) : BaseController
+public class MediaController(IMediaService mediaService, IFileUploadService fileUploadService) : BaseController
 {
     private readonly IMediaService _mediaService = mediaService;
     private readonly IFileUploadService _fileUploadService = fileUploadService;
 
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
-        => Ok(await _mediaService.Get(id));
+    public async Task<IActionResult> Get(int id) => Ok(await _mediaService.Get(id));
 
     [HttpGet]
     public async Task<IActionResult> GetAll(int pageIndex = 0, int pageSize = 10)

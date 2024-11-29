@@ -77,44 +77,12 @@
 </div>
 
 @section Scripts {
+    <script src="~/js/callapi.js"></script>
     <script>
         const baseUrlApi = '@ViewData["BaseUrlApi"]';
 
-        function deleteMedia(mediaId) {
-            swal({
-                title: "Delete Media",
-                text: "Are you sure you want to delete this media?",
-                icon: "warning",
-                buttons: ["Cancel", "Ok"],
-                dangerMode: true
-            }).then((willDelete) => {
-                if (willDelete) {
-                    $.ajax({
-                        url: `${baseUrlApi}/Media?id=${mediaId}`, // Endpoint API for delete
-                        type: 'DELETE',
-                        beforeSend: function () {
-                            swal({
-                                title: 'Please wait...',
-                                text: 'Deleting media...',
-                                buttons: false,
-                                closeOnClickOutside: false,
-                                closeOnEsc: false
-                            });
-                        },
-                        success: function (res, textStatus, xhr) {
-                            if (xhr.status == 204) {
-                                swal("Deleted!", "Media has been deleted.", "success").then(() => {
-                                    location.reload();
-                                });
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            console.error("Error deleting media:", error);
-                            alert('Failed to delete media. Please try again.');
-                        }
-                    });
-                }
-            })
+        function deleteMedia(id) {
+            deleteData(`${baseUrlApi}/Media?id=${id}`);
         }
 
         function showMedia(result) {
@@ -174,35 +142,6 @@
             formData.append("MediaFile", mediaFile);
 
             submitFormData(formData, `${baseUrlApi}/Media`, method);
-        }
-
-        function submitFormData(formData, url, method) {
-            $.ajax({
-                url: url,
-                type: method,
-                data: formData,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    swal({
-                        title: 'Please wait...',
-                        text: 'Saving media...',
-                        buttons: false,
-                        closeOnClickOutside: false,
-                        closeOnEsc: false
-                    });
-                },
-                success: function (res, textStatus, xhr) {
-                    if (xhr.status == 200) {
-                        swal("Saved!", "Media has been saved.", "success").then(() => {
-                            location.reload();
-                        });
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error saving media:", error);
-                }
-            });
         }
     </script>
 }

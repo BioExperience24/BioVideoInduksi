@@ -18,6 +18,7 @@ public static class ConfigureServices
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IMailService, MailService>();
         services.AddScoped<IMediaService, MediaService>();
+        services.AddScoped<ITemplateService, TemplateService>();
         services.AddScoped<IFileUploadService, FileUploadService>();
 
         services.AddSingleton<ICurrentTime, CurrentTime>();
@@ -35,6 +36,7 @@ public static class ConfigureServices
         {
             fv.RegisterValidatorsFromAssemblyContaining<MediaRequestValidation>(); // Validator untuk MediaRequest
             fv.RegisterValidatorsFromAssemblyContaining<MediaRequestUpdateValidation>(); // Validator untuk MediaRequestUpdate
+            fv.RegisterValidatorsFromAssemblyContaining<TemplateRequestUpdateValidation>(); 
         });
     }
 
@@ -44,6 +46,7 @@ public static class ConfigureServices
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IMediaService, MediaService>();
+        services.AddScoped<ITemplateService, TemplateService>();
         services.AddScoped<IFileUploadService, FileUploadService>();
     }
 
@@ -51,5 +54,6 @@ public static class ConfigureServices
     public static void AddAutoMapperConfiguration(this IServiceCollection services)
     {
         services.AddAutoMapper(typeof(MapMedia));
+        services.AddAutoMapper(typeof(MapTemplate));
     }
 }

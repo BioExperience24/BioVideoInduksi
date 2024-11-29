@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
-using CleanArchitecture.Application.Common.Models;
 
 namespace CleanArchitecture.Web.Requests;
 
