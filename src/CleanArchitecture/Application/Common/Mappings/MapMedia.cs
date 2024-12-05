@@ -7,7 +7,7 @@ public class MapMedia : Profile
 {
     public MapMedia()
     {
-        CreateMap<Media, MediaDTO>().ReverseMap();
+        CreateMap<Media, MediaResponse>().ReverseMap();
     }
       
 }

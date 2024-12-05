@@ -17,7 +17,7 @@ public class MediaController(IMediaService mediaService, IFileUploadService file
     public async Task<IActionResult> Get(int id) => Ok(await _mediaService.Get(id));
 
     [HttpGet]
-    public async Task<IActionResult> GetAll(int pageIndex = 0, int pageSize = 10)
+    public async Task<IActionResult> GetAll(int pageIndex = 0, int pageSize = 50)
     {
         return Ok(await _mediaService.GetCollection(pageIndex, pageSize));
     }

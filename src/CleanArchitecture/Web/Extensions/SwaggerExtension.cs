@@ -50,6 +50,16 @@ public static class SwaggerExtension
 
             options.AddSecurityRequirement(securityRequirement);
         });
+
+        services.AddSwaggerGen(options =>
+        {
+            options.MapType<DateTime>(() => new Microsoft.OpenApi.Models.OpenApiSchema
+            {
+                Type = "string",
+                Format = "date-time" // ISO-8601 format
+            });
+        });
+
         return services;
     }
 }

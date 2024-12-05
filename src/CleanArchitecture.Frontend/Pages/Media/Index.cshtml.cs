@@ -8,17 +8,17 @@ using Microsoft.Extensions.Configuration;
 
 namespace CleanArchitecture.Frontend.Pages.Media
 {
-    public class Media : PageModel
+    public class Index : PageModel
     {
         private readonly IMediaService _mediaService;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
         // Properti untuk simpan data
-        public IEnumerable<MediaDTO> Items { get; set; }
+        public IEnumerable<MediaResponse> Items { get; set; }
 
         // Inject service dan mapper
-        public Media(IMediaService mediaService, IMapper mapper, IConfiguration configuration)
+        public Index(IMediaService mediaService, IMapper mapper, IConfiguration configuration)
         {
             _mediaService = mediaService;
             _mapper = mapper;
@@ -35,12 +35,12 @@ namespace CleanArchitecture.Frontend.Pages.Media
 
             // parsing data to view
             ViewData["BaseUrlApi"] = baseUrlApi;
+            ViewData["Title"] = "Media";
 
             // Get data from database
             var mediaCollection = await _mediaService.GetCollection(1, 50);
 
-            // Mapping data dari domain ke DTO
-            Items = _mapper.Map<IEnumerable<MediaDTO>>(mediaCollection.Collection);
+            Items = _mapper.Map<IEnumerable<MediaResponse>>(mediaCollection.Collection);
         }
     }
 }

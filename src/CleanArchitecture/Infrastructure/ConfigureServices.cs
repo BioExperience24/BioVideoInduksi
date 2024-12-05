@@ -26,6 +26,7 @@ public static class ConfigureServices
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IMediaRepository, MediaRepository>();
         services.AddScoped<ITemplateRepository, TemplateRepository>();
+        services.AddScoped<ISignageRepository, SignageRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ApplicationDbContextInitializer>();
 

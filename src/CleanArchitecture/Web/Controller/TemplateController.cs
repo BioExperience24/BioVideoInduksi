@@ -15,7 +15,7 @@ public class TemplateController(ITemplateService templateService) : BaseControll
     public async Task<IActionResult> Get(int id) => Ok(await _templateService.Get(id));
 
     [HttpGet]
-    public async Task<IActionResult> GetAll(int pageIndex = 0, int pageSize = 10)
+    public async Task<IActionResult> GetAll(int pageIndex = 0, int pageSize = 50)
     {
         return Ok(await _templateService.GetCollection(pageIndex, pageSize));
     }

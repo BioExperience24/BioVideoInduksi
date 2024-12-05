@@ -2,6 +2,7 @@ namespace CleanArchitecture.Application.Common.Models
 {
     public class UploadFileResult
     {
+        public string FileName { get; set; } = string.Empty;
         public string FilePath { get; set; } = string.Empty;
         public MediaType MediaType { get; set; }
         public string Duration { get; set; } = string.Empty;

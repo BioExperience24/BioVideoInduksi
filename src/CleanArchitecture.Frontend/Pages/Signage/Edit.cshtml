@@ -1,0 +1,255 @@
+@page "/Signage/Edit/{id}"
+@model CleanArchitecture.Frontend.Pages.Signage.Edit
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <form action="" method="POST" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-sm-5">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group mb-3">
+                            <label for="signageName">Signage Name</label>
+                            <input type="text" name="SignageName" id="signageName" class="form-control" value="">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="signageTemplate">Signage Template</label>
+                            <select name="signageTemplate" id="signageTemplate" class="form-control"
+                                style="width: 100%;">
+                                @foreach (var item in Model.ItemTemplates)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                    @* if (Model.ItemSignage.TemplateId == item.Id)
+                                    {
+                                        <option value="@item.Id" selected>@item.Name</option>
+                                    }
+                                    else
+                                    {
+                                    } *@
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" style="display: none;" id="mediaContainer">
+                    <div class="card-body h-100">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered table-striped">
+                                    <tbody id="mediaTable">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-7">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group mb-3">
+                            <label for="mediaContent">Media Content</label>
+                            <div class="input-group">
+                                <!-- Dropdown -->
+                                <select name="mediaContent" id="mediaContent" class="form-control" style="width: 100%;"
+                                    onchange="selectMedia(this.value)">
+                                    <option value="" disabled selected>Select Media</option>
+                                    @foreach (var item in Model.ItemMedias)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+
+                                <!-- Button -->
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-primary" onclick="addMedia()">Tambah</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="runningText">Running Text</label>
+                            <textarea name="runningText" id="runningText" rows="5" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="textColor">Text Color</label>
+                            <input type="color" name="textColor" id="textColor" class="form-control">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="backgroundColor">Background Color</label>
+                            <input type="color" name="backgroundColor" id="backgroundColor" class="form-control">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="fontSize">Font Size</label>
+                            <input type="number" name="fontSize" id="fontSize" class="form-control" min="1" value="12">
+                        </div>
+                        <div class="form-group">
+                            <label for="textSpeed">Text Speed</label>
+                            <input type="number" name="textSpeed" id="textSpeed" class="form-control" min="0" value="5">
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-0 text-end">
+                        <button type="button" class="btn btn-primary" onclick="saveData()">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        const baseUrlApi = '@ViewData["BaseUrlApi"]';
+        var mediaId = '';
+
+        async function loadData() {
+            await $.ajax({
+                url: `${baseUrlApi}/Signage/${@ViewData["Id"]}`,
+                type: 'GET',
+                beforeSend: function () {
+                    swal({
+                        title: 'Please wait...',
+                        text: 'Fetching data...',
+                        buttons: false,
+                        closeOnClickOutside: false,
+                        closeOnEsc: false
+                    });
+                },
+                success: async function (res, textStatus, xhr) {
+                    if (xhr.status == 200) {
+                        swal.close();
+
+                        await showEditData(res);
+                        return;
+                    }
+
+                    swal({
+                        title: 'Error',
+                        text: 'Failed to fetch data',
+                        icon: 'error',
+                        closeOnClickOutside: false,
+                        closeOnEsc: false
+                    })
+                    .then(() => {
+                        window.location.href = '/Signage/Index';
+                    });
+                }
+            });
+        }
+
+        function addMedia() {
+            if (mediaId == '') return;
+
+            $.ajax({
+                url: `${baseUrlApi}/Media/${mediaId}`,
+                type: 'GET',
+                beforeSend: function () {
+                    swal({
+                        title: 'Please wait...',
+                        text: 'Fetching data...',
+                        buttons: false,
+                        closeOnClickOutside: false,
+                        closeOnEsc: false
+                    });
+                },
+                success: function (res, textStatus, xhr) {
+                    if (xhr.status == 200) {
+                        swal.close();
+                        addMediaContent(res);
+                        $('#mediaContainer').css('display', 'block');
+                        $('#mediaContent').val('').trigger('change');
+                        mediaId = '';
+                    }
+                }
+            });
+        }
+
+        function selectMedia(id) {
+            mediaId = id;
+        }
+
+        function showEditData(result) {
+            $('#signageName').val(result.name);
+            $('#signageTemplate').val(result.templateId).trigger('change');
+
+            let contents = JSON.parse(result.content);
+            let contentsMedia = contents.content1.content;
+            let contentText = contents.content2;
+
+            for (let i = 0; i < contentsMedia.length; i++) {
+                addMediaContent(contentsMedia[i]);
+            }
+
+            $('#runningText').val(contentText.content);
+            $('#textColor').val(contentText.option.color);
+            $('#backgroundColor').val(contentText.option.bgcolor);
+            $('#fontSize').val(contentText.option.size);
+            $('#textSpeed').val(contentText.option.speed);
+
+            $('#mediaContainer').css('display', 'block');
+        }
+
+        function addMediaContent(result) {
+            let content = `<tr>
+                    <td>
+                        <input type="hidden" class="media-ids" value="${result.id}">
+                        ${result.name} <br>
+                        Type: ${result.mediaType || result.type}
+                    </td>
+                    <td>
+                        ${contentMediaShow(result)}
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="removeMedia(${result.id})">&times;</button>
+                    </td>
+                </tr>`;
+
+            $('#mediaTable').append(content);
+        }
+
+        function removeMedia(id) {
+            $('.media-ids').each(function () {
+                if ($(this).val() == id) {
+                    $(this).parent().parent().remove();
+                }
+            });
+
+            if ($('.media-ids').length == 0) {
+                $('#mediaContainer').css('display', 'none');
+                $('#mediaTable').html('');
+            }
+        }
+
+        function contentMediaShow(result) {
+            if (result.type == "Image") {
+                return `<img src="${result.path}" style="width: 100px">`;
+            } else {
+                return `<video src="${result.path}" controls style="width: 100px"></video>`;
+            }
+        }
+
+        async function saveData() {
+            let formData = new FormData();
+
+            $('.media-ids').each(function () {
+                formData.append("MediaIds[]", $(this).val());
+            });
+            formData.append("Id", '@ViewData["Id"]');
+            formData.append("Name", $('#signageName').val());
+            formData.append("TemplateId", $('#signageTemplate').val());
+            formData.append("RunningText", $('#runningText').val());
+            formData.append("TextColor", $('#textColor').val());
+            formData.append("BackgroundColor", $('#backgroundColor').val());
+            formData.append("FontSize", $('#fontSize').val());
+            formData.append("TextSpeed", $('#textSpeed').val());
+
+            await submitFormData(formData, `${baseUrlApi}/Signage`, 'PUT');
+        }
+
+        // init function
+        loadData();
+    </script>
+}

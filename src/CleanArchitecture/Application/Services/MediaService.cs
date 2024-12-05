@@ -1,5 +1,3 @@
-using AutoMapper;
-
 using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Application.Common.Models;
 using CleanArchitecture.Application.Common.Models.Media;
@@ -9,13 +7,11 @@ namespace CleanArchitecture.Application.Services;
 
 public class MediaService(
     IUnitOfWork unitOfWork,
-    IMapper mapper,
     IFileUploadService fileUploadService,
     IConfiguration configuration
 ) : IMediaService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    private readonly IMapper _mapper = mapper;
     private readonly IConfiguration _configuration = configuration;
     private readonly IFileUploadService _fileUploadService = fileUploadService;
 
@@ -57,6 +53,7 @@ public class MediaService(
         var media = new Media
         {
             Name = request.Name,
+            Filename = file.FileName,
             Path = file.FilePath,
             Size = file.FileSize,
             MediaType = file.MediaType,
@@ -86,6 +83,7 @@ public class MediaService(
             var file = await _fileUploadService.UploadFileAsync(request.MediaFile, token);
 
             // Perbarui data file di entitas
+            data.Filename = file.FileName;
             data.Path = file.FilePath;
             data.Size = file.FileSize;
             data.Duration = file.Duration;
@@ -98,10 +96,7 @@ public class MediaService(
             }, token);
 
             // Hapus file lama setelah transaksi berhasil
-            if (!string.IsNullOrWhiteSpace(oldFilePath))
-            {
-                await _fileUploadService.DeleteFileAsync(oldFilePath, token);
-            }
+            await _fileUploadService.DeleteFileAsync(oldFilePath, token);
         }
         else
         {

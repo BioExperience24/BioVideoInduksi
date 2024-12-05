@@ -17,10 +17,12 @@ public class UnitOfWork : IUnitOfWork
     // repositories
 
     public IUserRepository UserRepository { get; }
-
     public IMediaRepository MediaRepository { get; }
-
     public ITemplateRepository TemplateRepository { get; }
+    public ISignageRepository SignageRepository { get; }
+    public IPlayerGroupRepository PlayerGroupRepository { get; }
+    public IPlayerRepository PlayerRepository { get; }
+    public IPublishRepository PublishRepository { get; }
 
     public UnitOfWork(ApplicationDbContext dbContext)
     {
@@ -29,6 +31,10 @@ public class UnitOfWork : IUnitOfWork
         UserRepository = new UserRepository(_context);
         MediaRepository = new MediaRepository(_context);
         TemplateRepository = new TemplateRepository(_context);
+        SignageRepository = new SignageRepository(_context);
+        PlayerGroupRepository = new PlayerGroupRepository(_context);
+        PlayerRepository = new PlayerRepository(_context);
+        PublishRepository = new PublishRepository(_context);
     }
 
     // save changes

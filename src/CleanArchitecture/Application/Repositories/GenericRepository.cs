@@ -114,6 +114,8 @@ public class GenericRepository<T>(ApplicationDbContext context) : IGenericReposi
         {
             Count = itemCount,
             Collection = items,
+            PageIndex = pageIndex,
+            PageSize = pageSize
         };
 
         return result;

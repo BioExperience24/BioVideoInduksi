@@ -7,7 +7,7 @@ public class MapTemplate : Profile
 {
     public MapTemplate()
     {
-        CreateMap<Template, TemplateDTO>().ReverseMap();
+        CreateMap<Template, TemplateResponse>().ReverseMap();
     }
       
 }

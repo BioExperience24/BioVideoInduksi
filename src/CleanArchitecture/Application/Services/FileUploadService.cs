@@ -54,7 +54,7 @@ namespace CleanArchitecture.Application.Services
             string fileSize = (file.Length / (1024.0 * 1024.0)).ToString("F2");
 
             // durasio video
-            string duration = string.Empty;
+            string duration = "00:00:05";
             if (mediaType == MediaType.Video)
             {
                 duration = GetVideoDuration(fileUploadPath);
@@ -62,6 +62,7 @@ namespace CleanArchitecture.Application.Services
 
             return new UploadFileResult
             {
+                FileName = fileName,
                 FilePath = relativePath,
                 MediaType = mediaType ?? MediaType.Image,
                 Duration = duration,
@@ -137,6 +138,7 @@ namespace CleanArchitecture.Application.Services
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Error getting video duration: {ex.Message}");
                 return string.Empty;
             }
         }

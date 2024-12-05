@@ -19,6 +19,11 @@ public static class ConfigureServices
         services.AddScoped<IMailService, MailService>();
         services.AddScoped<IMediaService, MediaService>();
         services.AddScoped<ITemplateService, TemplateService>();
+        services.AddScoped<ISignageService, SignageService>();
+        services.AddScoped<IPlayerGroupService, PlayerGroupService>();
+        services.AddScoped<IPlayerService, PlayerService>();
+        services.AddScoped<IPublishService, PublishService>();
+        services.AddScoped<ICheckService, CheckService>();
         services.AddScoped<IFileUploadService, FileUploadService>();
 
         services.AddSingleton<ICurrentTime, CurrentTime>();
@@ -37,6 +42,14 @@ public static class ConfigureServices
             fv.RegisterValidatorsFromAssemblyContaining<MediaRequestValidation>(); // Validator untuk MediaRequest
             fv.RegisterValidatorsFromAssemblyContaining<MediaRequestUpdateValidation>(); // Validator untuk MediaRequestUpdate
             fv.RegisterValidatorsFromAssemblyContaining<TemplateRequestUpdateValidation>(); 
+            fv.RegisterValidatorsFromAssemblyContaining<SignageRequestAddValidation>();
+            fv.RegisterValidatorsFromAssemblyContaining<SignageRequestUpdateValidation>();
+            fv.RegisterValidatorsFromAssemblyContaining<PlayerGroupRequestAddValidation>();
+            fv.RegisterValidatorsFromAssemblyContaining<PlayerGroupRequestUpdateValidation>();
+            fv.RegisterValidatorsFromAssemblyContaining<PlayerRequestAddValidation>();
+            fv.RegisterValidatorsFromAssemblyContaining<PlayerRequestUpdateValidation>();
+            fv.RegisterValidatorsFromAssemblyContaining<PublishRequestAddValidation>();
+            fv.RegisterValidatorsFromAssemblyContaining<PublishRequestUpdateValidation>();
         });
     }
 
@@ -47,6 +60,10 @@ public static class ConfigureServices
 
         services.AddScoped<IMediaService, MediaService>();
         services.AddScoped<ITemplateService, TemplateService>();
+        services.AddScoped<ISignageService, SignageService>();
+        services.AddScoped<IPlayerGroupService, PlayerGroupService>();
+        services.AddScoped<IPlayerService, PlayerService>();
+        services.AddScoped<IPublishService, PublishService>();
         services.AddScoped<IFileUploadService, FileUploadService>();
     }
 
@@ -55,5 +72,9 @@ public static class ConfigureServices
     {
         services.AddAutoMapper(typeof(MapMedia));
         services.AddAutoMapper(typeof(MapTemplate));
+        services.AddAutoMapper(typeof(MapSignage));
+        services.AddAutoMapper(typeof(MapPlayerGroup));
+        services.AddAutoMapper(typeof(MapPlayer));
+        services.AddAutoMapper(typeof(MapPublish));
     }
 }

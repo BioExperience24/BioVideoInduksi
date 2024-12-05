@@ -1,11 +1,54 @@
 @page
 @model CleanArchitecture.Frontend.Pages.Signage.Index
-@{
-    ViewData["Title"] = "Signage";
-}
 
 <h1>@ViewData["Title"]</h1>
 
-<div>
-    
+
+<div class="container">
+    <a href="/Signage/Create" class="btn btn-primary">Create</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Name</th>
+                <th>Template</th>
+                <th class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items != null && Model.Items.Any())
+            {
+                @foreach (var item in Model.Items.Select((value, index) => new { index, value }))
+                {
+                    <tr>
+                        <td>@(item.index + 1)</td>
+                        <td>@item.value.Name</td>
+                        <td>@item.value.Template.Name</td>
+                        <td class="text-center">
+                            <a href="/Signage/Edit/@item.value.Id" class="btn btn-primary">Edit</a>
+                            <button class="btn btn-danger" onclick="deleteSignage(@item.value.Id)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="text-center">No template found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
+
+@section Scripts {
+    <script src="~/js/callapi.js"></script>
+    <script>
+        const baseUrlApi = '@ViewData["BaseUrlApi"]';
+
+        function deleteSignage(id) {
+            deleteData(`${baseUrlApi}/Signage?id=${id}`);
+        }
+    </script>
+}

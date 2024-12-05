@@ -1,0 +1,119 @@
+@page
+@model CleanArchitecture.Frontend.Pages.PlayerGroup.Index
+
+<h1>@ViewData["Title"]</h1>
+
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalShow">Create</button>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Group Name</th>
+            <th class="text-center">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Items != null && Model.Items.Any())
+        {
+            @foreach (var itemPlayerGroup in Model.Items.Select((value, index) => new { index, value }))
+            {
+                <tr>
+                    <td>@(itemPlayerGroup.index + 1)</td>
+                    <td>@itemPlayerGroup.value.Name</td>
+                    <td class="text-center">
+                        <button class="btn btn-primary" onclick="editPlayerGroup(@itemPlayerGroup.value.Id)">Edit</button>
+                        <button class="btn btn-danger" onclick="deletePlayerGroup(@itemPlayerGroup.value.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3" class="text-center">No Player Group found</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal fade" id="modalShow" tabindex="-1" role="dialog" aria-labelledby="modalShowLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalShowLabel">New Player Group</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createPlayerGroupForm">
+                    <input type="hidden" id="playerGrouId">
+                    <div class="form-group mb-3">
+                        <label for="playerGroupName">Group Name</label>
+                        <input type="text" class="form-control" id="playerGroupName" placeholder="Enter PlayerGroup name" required>
+                    </div>
+                    <div class="show-PlayerGroup"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="savePlayerGroup()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/callapi.js"></script>
+    <script>
+        const baseUrlApi = '@ViewData["BaseUrlApi"]';
+
+        function deletePlayerGroup(id) {
+            deleteData(`${baseUrlApi}/PlayerGroup?id=${id}`);
+        }
+
+        function showPlayerGroup(result) {
+            $('#playerGroupName').val(result.name);
+            $('#playerGrouId').val(result.id);
+            $('#modalShow').modal('show');
+            $('#modalShowLabel').text('Edit Player Group');
+        }
+
+        function editPlayerGroup(playerGrouId) {
+            $.ajax({
+                url: `${baseUrlApi}/PlayerGroup/${playerGrouId}`,
+                type: 'GET',
+                beforeSend: function () {
+                    swal({
+                        title: 'Please wait...',
+                        text: 'Fetching PlayerGroup...',
+                        buttons: false,
+                        closeOnClickOutside: false,
+                        closeOnEsc: false
+                    });
+                },
+                success: function (res, textStatus, xhr) {
+                    if (xhr.status == 200) {
+                        swal.close();
+                        showPlayerGroup(res);
+                    }
+                }
+            });
+        }
+
+        function savePlayerGroup() {
+            let playerGroupName = $('#playerGroupName').val();
+            let id = $('#playerGrouId').val();
+            let method = 'POST';
+            let formData = new FormData();
+
+            if (id != '') {
+                formData.append("Id", id);
+                method = 'PUT';
+            }
+
+            formData.append("Name", playerGroupName);
+
+            submitFormData(formData, `${baseUrlApi}/PlayerGroup`, method);
+        }
+    </script>
+}

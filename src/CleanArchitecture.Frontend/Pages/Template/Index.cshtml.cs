@@ -8,17 +8,17 @@ using Microsoft.Extensions.Configuration;
 
 namespace CleanArchitecture.Frontend.Pages.Template
 {
-    public class Template : PageModel
+    public class Index : PageModel
     {
         private readonly ITemplateService _templateService;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
         // Properti untuk simpan data
-        public IEnumerable<TemplateDTO> Items { get; set; }
+        public IEnumerable<TemplateResponse> Items { get; set; }
 
         // Inject service dan mapper
-        public Template(ITemplateService templateService, IMapper mapper, IConfiguration configuration)
+        public Index(ITemplateService templateService, IMapper mapper, IConfiguration configuration)
         {
             _templateService = templateService;
             _mapper = mapper;
@@ -30,10 +30,11 @@ namespace CleanArchitecture.Frontend.Pages.Template
         public async Task OnGetAsync()
         {
             ViewData["BaseUrlApi"] = baseUrlApi;
+            ViewData["Title"] = "Template";
 
             var templateCollection = await _templateService.GetCollection(1, 50);
 
-            Items = _mapper.Map<IEnumerable<TemplateDTO>>(templateCollection.Collection);
+            Items = _mapper.Map<IEnumerable<TemplateResponse>>(templateCollection.Collection);
         }
     }
 }

@@ -40,6 +40,10 @@ namespace CleanArchitecture.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Filename")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("MediaType")
                         .HasColumnType("nvarchar(max)");
 
@@ -81,7 +85,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PlayerGroup_IdId")
+                    b.Property<int?>("PlayerGroupId")
                         .HasColumnType("int");
 
                     b.Property<string>("Serial")
@@ -93,7 +97,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PlayerGroup_IdId");
+                    b.HasIndex("PlayerGroupId");
 
                     b.ToTable("Players");
                 });
@@ -141,7 +145,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     b.Property<DateTime?>("EndTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("Player_IdId")
+                    b.Property<int?>("PlayerId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("PublishDate")
@@ -151,7 +155,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Signage_IdId")
+                    b.Property<int?>("SignageId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("StartTime")
@@ -166,9 +170,11 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Player_IdId");
+                    b.HasIndex("PlayerId")
+                        .IsUnique()
+                        .HasFilter("[PlayerId] IS NOT NULL");
 
-                    b.HasIndex("Signage_IdId");
+                    b.HasIndex("SignageId");
 
                     b.ToTable("Publishes", (string)null);
                 });
@@ -195,7 +201,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Template_IdId")
+                    b.Property<int?>("TemplateId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -203,7 +209,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Template_IdId");
+                    b.HasIndex("TemplateId");
 
                     b.ToTable("Signages", (string)null);
                 });
@@ -293,35 +299,40 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.Player", b =>
                 {
-                    b.HasOne("CleanArchitecture.Domain.Entities.PlayerGroup", "PlayerGroup_Id")
+                    b.HasOne("CleanArchitecture.Domain.Entities.PlayerGroup", "PlayerGroup")
                         .WithMany()
-                        .HasForeignKey("PlayerGroup_IdId");
+                        .HasForeignKey("PlayerGroupId");
 
-                    b.Navigation("PlayerGroup_Id");
+                    b.Navigation("PlayerGroup");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.Publish", b =>
                 {
-                    b.HasOne("CleanArchitecture.Domain.Entities.Player", "Player_Id")
+                    b.HasOne("CleanArchitecture.Domain.Entities.Player", "Player")
+                        .WithOne("Publish")
+                        .HasForeignKey("CleanArchitecture.Domain.Entities.Publish", "PlayerId");
+
+                    b.HasOne("CleanArchitecture.Domain.Entities.Signage", "Signage")
                         .WithMany()
-                        .HasForeignKey("Player_IdId");
+                        .HasForeignKey("SignageId");
 
-                    b.HasOne("CleanArchitecture.Domain.Entities.Signage", "Signage_Id")
-                        .WithMany()
-                        .HasForeignKey("Signage_IdId");
+                    b.Navigation("Player");
 
-                    b.Navigation("Player_Id");
-
-                    b.Navigation("Signage_Id");
+                    b.Navigation("Signage");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.Signage", b =>
                 {
-                    b.HasOne("CleanArchitecture.Domain.Entities.Template", "Template_Id")
+                    b.HasOne("CleanArchitecture.Domain.Entities.Template", "Template")
                         .WithMany()
-                        .HasForeignKey("Template_IdId");
+                        .HasForeignKey("TemplateId");
 
-                    b.Navigation("Template_Id");
+                    b.Navigation("Template");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Player", b =>
+                {
+                    b.Navigation("Publish");
                 });
 #pragma warning restore 612, 618
         }

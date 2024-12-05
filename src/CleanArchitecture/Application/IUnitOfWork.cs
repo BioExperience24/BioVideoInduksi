@@ -7,6 +7,10 @@ public interface IUnitOfWork
     IUserRepository UserRepository { get; }
     IMediaRepository MediaRepository { get; }
     ITemplateRepository TemplateRepository { get; }
+    ISignageRepository SignageRepository { get; }
+    IPlayerGroupRepository PlayerGroupRepository { get; }
+    IPlayerRepository PlayerRepository { get; }
+    IPublishRepository PublishRepository { get; }
 
     /// <summary>
     /// Saves changes to the database. This is called when the user changes the data or saves a new version of the data.
