@@ -1,54 +1,77 @@
 @page
 @model CleanArchitecture.Frontend.Pages.Media.Index
 
-<h1>@ViewData["Title"]</h1>
+<div class="row mb-2">
+    <div class="col-12 text-right">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalShow">
+            <i class="fa fa-plus"></i> Create
+        </button>
+    </div>
+</div>
 
-<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalShow">Create</button>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>No</th>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Size (Mb)</th>
-            <th>Duration</th>
-            <th class="text-center">Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model.Items != null && Model.Items.Any())
-        {
-            @foreach (var itemMedia in Model.Items.Select((value, index) => new { index, value }))
-            {
-                <tr>
-                    <td>@(itemMedia.index + 1)</td>
-                    <td>@itemMedia.value.Name</td>
-                    <td>@itemMedia.value.MediaType</td>
-                    <td>@itemMedia.value.Size</td>
-                    <td>@itemMedia.value.Duration</td>
-                    <td class="text-center">
-                        <button class="btn btn-primary" onclick="editMedia(@itemMedia.value.Id)">Edit</button>
-                        <button class="btn btn-danger" onclick="deleteMedia(@itemMedia.value.Id)">Delete</button>
-                    </td>
-                </tr>
-            }
-        }
-        else
-        {
-            <tr>
-                <td colspan="6" class="text-center">No media found.</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-muted text-title pt-2">List @ViewData["Title"]</h3>
+            </div>
+            <div class="card-body py-0">
+                <div class="table-responsive">
+                    <table class="table table-bordered zero-configuration">
+                        <thead>
+                            <tr>
+                                <th width="5%" class="text-center">No</th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Size (Mb)</th>
+                                <th>Duration</th>
+                                <th class="text-center" width="15%">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Items != null && Model.Items.Any())
+                            {
+                                @foreach (var itemMedia in Model.Items.Select((value, index) => new { index, value }))
+                                {
+                                    <tr>
+                                        <td class="text-center">@(itemMedia.index + 1)</td>
+                                        <td>@itemMedia.value.Name</td>
+                                        <td>@itemMedia.value.MediaType</td>
+                                        <td>@itemMedia.value.Size</td>
+                                        <td>@itemMedia.value.Duration</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-primary" onclick="editMedia(@itemMedia.value.Id)">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-danger" onclick="deleteMedia(@itemMedia.value.Id)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center">No media found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="modalShow" tabindex="-1" role="dialog" aria-labelledby="modalShowLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalShowLabel">Create Media</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <form id="createMediaForm">
@@ -65,7 +88,6 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" onclick="saveMedia()">Save</button>
             </div>
         </div>
@@ -73,7 +95,7 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/callapi.js"></script>
+    <script src="~/theme/plugins/tables/js/datatable-init/datatable-basic.min.js"></script>
     <script>
         const baseUrlApi = '@ViewData["BaseUrlApi"]';
 

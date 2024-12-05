@@ -1,49 +1,67 @@
 @page
 @model CleanArchitecture.Frontend.Pages.Signage.Index
 
-<h1>@ViewData["Title"]</h1>
+<div class="row mb-2">
+    <div class="col-12 text-right">
+        <a href="/Signage/Create" class="btn btn-primary">
+            <i class="fa fa-plus"></i> Create
+        </a>
+    </div>
+</div>
 
-
-<div class="container">
-    <a href="/Signage/Create" class="btn btn-primary">Create</a>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Name</th>
-                <th>Template</th>
-                <th class="text-center">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model.Items != null && Model.Items.Any())
-            {
-                @foreach (var item in Model.Items.Select((value, index) => new { index, value }))
-                {
-                    <tr>
-                        <td>@(item.index + 1)</td>
-                        <td>@item.value.Name</td>
-                        <td>@item.value.Template.Name</td>
-                        <td class="text-center">
-                            <a href="/Signage/Edit/@item.value.Id" class="btn btn-primary">Edit</a>
-                            <button class="btn btn-danger" onclick="deleteSignage(@item.value.Id)">Delete</button>
-                        </td>
-                    </tr>
-                }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="4" class="text-center">No template found.</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-muted text-title pt-2">List @ViewData["Title"]</h3>
+            </div>
+            <div class="card-body py-0">
+                <div class="table-responsive">
+                    <table class="table table-bordered zero-configuration">
+                        <thead>
+                            <tr>
+                                <th width="5%" class="text-center">No</th>
+                                <th>Name</th>
+                                <th>Template</th>
+                                <th class="text-center" width="15%">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Items != null && Model.Items.Any())
+                            {
+                                @foreach (var item in Model.Items.Select((value, index) => new { index, value }))
+                                {
+                                    <tr>
+                                        <td class="text-center">@(item.index + 1)</td>
+                                        <td>@item.value.Name</td>
+                                        <td>@item.value.Template.Name</td>
+                                        <td class="text-center">
+                                            <a href="/Signage/Edit/@item.value.Id" class="btn btn-primary">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <button class="btn btn-danger" onclick="deleteSignage(@item.value.Id)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center">No template found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
-    <script src="~/js/callapi.js"></script>
+    <script src="~/theme/plugins/tables/js/datatable-init/datatable-basic.min.js"></script>
     <script>
         const baseUrlApi = '@ViewData["BaseUrlApi"]';
 

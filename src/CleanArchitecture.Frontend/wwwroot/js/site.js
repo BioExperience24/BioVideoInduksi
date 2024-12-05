@@ -2,7 +2,7 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
-function submitFormData(formData, url, method = "POST") {
+function submitFormData(formData, url, method = "POST", redirectUrl = '') {
 	$.ajax({
 		url: url,
 		type: method,
@@ -21,7 +21,11 @@ function submitFormData(formData, url, method = "POST") {
 		success: function (res, textStatus, xhr) {
 			if (xhr.status == 200) {
 				swal("Saved!", "Data has been saved.", "success").then(() => {
-					location.reload();
+					if (redirectUrl != '') {
+						window.location.href = redirectUrl;
+					} else {
+						location.reload();
+					}
 				});
 			}
 		}

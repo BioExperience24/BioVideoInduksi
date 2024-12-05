@@ -1,67 +1,61 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="container-fluid">
-    <div class="block-header">
-        <h2>Dashboard</h2>
-    </div>
-
-    <div class="row clearfix">
-        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-            <div class="info-box bg-pink hover-expand-effect">
-                <div class="icon">
-                    <i class="material-icons">tv</i>
+<div class="row">
+    <div class="col-lg-3 col-sm-6">
+        <div class="card gradient-1">
+            <div class="card-body">
+                <h3 class="card-title text-white">Products Sold</h3>
+                <div class="d-inline-block">
+                    <h2 class="text-white">4565</h2>
+                    <p class="text-white mb-0">Jan - March 2019</p>
                 </div>
-                <div class="content">
-                    <div class="text">Signage</div>
-                    <div class="number count-to" data-from="0" data-to="125" data-speed="15" data-fresh-interval="20">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-            <div class="info-box bg-cyan hover-expand-effect">
-                <div class="icon">
-                    <i class="material-icons">tv</i>
-                </div>
-                <div class="content">
-                    <div class="text">Player</div>
-                    <div class="number count-to" data-from="0" data-to="257" data-speed="1000" data-fresh-interval="20">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-            <div class="info-box bg-light-green hover-expand-effect">
-                <div class="icon">
-                    <i class="material-icons">tv</i>
-                </div>
-                <div class="content">
-                    <div class="text">Player Live</div>
-                    <div class="number count-to" data-from="0" data-to="243" data-speed="1000" data-fresh-interval="20">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-            <div class="info-box bg-orange hover-expand-effect">
-                <div class="icon">
-                    <i class="material-icons">storage</i>
-                </div>
-                <div class="content">
-                    <div class="text">Storage Usage</div>
-                    <div class="number count-to" data-from="0" data-to="1225" data-speed="1000"
-                        data-fresh-interval="20"></div>
-                </div>
+                <span class="float-right display-5 opacity-5"><i class="fa fa-shopping-cart"></i></span>
             </div>
         </div>
     </div>
-
+    <div class="col-lg-3 col-sm-6">
+        <div class="card gradient-2">
+            <div class="card-body">
+                <h3 class="card-title text-white">Net Profit</h3>
+                <div class="d-inline-block">
+                    <h2 class="text-white">$ 8541</h2>
+                    <p class="text-white mb-0">Jan - March 2019</p>
+                </div>
+                <span class="float-right display-5 opacity-5"><i class="fa fa-money"></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-sm-6">
+        <div class="card gradient-3">
+            <div class="card-body">
+                <h3 class="card-title text-white">New Customers</h3>
+                <div class="d-inline-block">
+                    <h2 class="text-white">4565</h2>
+                    <p class="text-white mb-0">Jan - March 2019</p>
+                </div>
+                <span class="float-right display-5 opacity-5"><i class="fa fa-users"></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-sm-6">
+        <div class="card gradient-4">
+            <div class="card-body">
+                <h3 class="card-title text-white">Customer Satisfaction</h3>
+                <div class="d-inline-block">
+                    <h2 class="text-white">99%</h2>
+                    <p class="text-white mb-0">Jan - March 2019</p>
+                </div>
+                <span class="float-right display-5 opacity-5"><i class="fa fa-heart"></i></span>
+            </div>
+        </div>
+    </div>
 </div>
 
+
 @section Scripts {
-    <script src="~/template/js/pages/index.js"></script>
+    <script src="~/theme/js/dashboard/dashboard.js"></script>
 }

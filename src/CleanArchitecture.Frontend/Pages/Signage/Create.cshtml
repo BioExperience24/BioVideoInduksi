@@ -1,95 +1,118 @@
 @page
 @model CleanArchitecture.Frontend.Pages.Signage.Create
 
-<h1>@ViewData["Title"]</h1>
-
-<div>
-    <form action="" method="POST" enctype="multipart/form-data">
-        <div class="row">
-            <div class="col-sm-5">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="form-group mb-3">
-                            <label for="signageName">Signage Name</label>
-                            <input type="text" name="SignageName" id="signageName" class="form-control">
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="signageTemplate">Signage Template</label>
-                            <select name="signageTemplate" id="signageTemplate" class="form-control"
-                                style="width: 100%;">
-                                @foreach (var item in Model.ItemTemplates)
-                                {
-                                    <option value="@item.Id">@item.Name</option>
-                                }
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="card" style="display: none;" id="mediaContainer">
-                    <div class="card-body h-100">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table class="table table-bordered table-striped">
-                                    <tbody id="mediaTable">
-
-                                    </tbody>
-                                </table>
+<div class="row">
+    <div class="col-12">
+        <h3 class="text-muted text-title">@ViewData["Title"]</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <form action="" method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-group mb-3">
+                                <label for="signageName">Signage Name</label>
+                                <input type="text" name="SignageName" id="signageName" class="form-control">
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-7">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="form-group mb-3">
-                            <label for="mediaContent">Media Content</label>
-                            <div class="input-group">
-                                <!-- Dropdown -->
-                                <select name="mediaContent" id="mediaContent" class="form-control" style="width: 100%;"
-                                    onchange="selectMedia(this.value)">
-                                    <option value="" disabled selected>Select Media</option>
-                                    @foreach (var item in Model.ItemMedias)
+                            <div class="form-group mb-3">
+                                <label for="signageTemplate">Signage Template</label>
+                                <select name="signageTemplate" id="signageTemplate" class="form-control"
+                                    style="width: 100%;">
+                                    @foreach (var item in Model.ItemTemplates)
                                     {
                                         <option value="@item.Id">@item.Name</option>
                                     }
                                 </select>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="mediaContent">Media Content</label>
+                                <div class="input-group">
+                                    <!-- Dropdown -->
+                                    <select name="mediaContent" id="mediaContent" class="form-control"
+                                        onchange="selectMedia(this.value)">
+                                        <option value="" disabled selected>Select Media</option>
+                                        @foreach (var item in Model.ItemMedias)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    </select>
 
-                                <!-- Button -->
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-primary" onclick="addMedia()">Tambah</button>
+                                    <!-- Button -->
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-primary" onclick="addMedia()">Add
+                                            Media</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="runningText">Running Text</label>
+                                <textarea name="runningText" id="runningText" rows="3" class="form-control"></textarea>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group mb-3">
+                                        <label for="backgroundColor">Background Color</label>
+                                        <input type="color" name="backgroundColor" id="backgroundColor"
+                                            class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group mb-3">
+                                        <label for="textColor">Text Color</label>
+                                        <input type="color" name="textColor" id="textColor" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group mb-3">
+                                        <label for="fontSize">Font Size</label>
+                                        <input type="number" name="fontSize" id="fontSize" class="form-control" min="1"
+                                            value="12">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="textSpeed">Text Speed</label>
+                                        <input type="number" name="textSpeed" id="textSpeed" class="form-control"
+                                            min="0" value="5">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 text-right">
+                                    <a href="javascript:history.back()" class="btn btn-secondary text-white">Back</a>
+                                    <button type="button" class="btn btn-primary" onclick="saveData()">Save</button>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="form-group mb-3">
-                            <label for="runningText">Running Text</label>
-                            <textarea name="runningText" id="runningText" rows="5" class="form-control"></textarea>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="textColor">Text Color</label>
-                            <input type="color" name="textColor" id="textColor" class="form-control">
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="backgroundColor">Background Color</label>
-                            <input type="color" name="backgroundColor" id="backgroundColor" class="form-control">
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="fontSize">Font Size</label>
-                            <input type="number" name="fontSize" id="fontSize" class="form-control" min="1" value="12">
-                        </div>
-                        <div class="form-group">
-                            <label for="textSpeed">Text Speed</label>
-                            <input type="number" name="textSpeed" id="textSpeed" class="form-control" min="0" value="5">
-                        </div>
                     </div>
-                    <div class="card-footer bg-white border-0 text-end">
-                        <button type="button" class="btn btn-primary" onclick="saveData()">Submit</button>
+
+                </div>
+                <div class="col-sm-6">
+                    <div class="card" style="display: none;" id="mediaContainer">
+                        <div class="card-body h-100">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table table-bordered table-striped">
+                                        <tbody id="mediaTable">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 
 @section Scripts {
@@ -98,7 +121,7 @@
         var mediaId = '';
 
         function addMedia() {
-            if (mediaId != '') return;
+            if (mediaId == '') return;
 
             $.ajax({
                 url: `${baseUrlApi}/Media/${mediaId}`,
@@ -133,18 +156,18 @@
 
         function addMediaContent(result) {
             let content = `<tr>
-                <td>
-                    <input type="hidden" class="media-ids" value="${result.id}">
-                    ${result.name} <br>
-                    Type: ${result.mediaType}
-                </td>
-                <td>
-                    ${contentMediaShow(result)}
-                </td>
-                <td>
-                    <button type="button" class="btn btn-sm btn-danger" onclick="removeMedia(${result.id})">&times;</button>
-                </td>
-            </tr>`;
+                                <td>
+                                    <input type="hidden" class="media-ids" value="${result.id}">
+                                    ${result.name} <br>
+                                    Type: ${result.mediaType}
+                                </td>
+                                <td>
+                                    ${contentMediaShow(result)}
+                                </td>
+                                <td width="10%" class="text-center">
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="removeMedia(${result.id})">&times;</button>
+                                </td>
+                            </tr>`;
 
             $('#mediaTable').append(content);
         }
@@ -172,6 +195,20 @@
 
         async function saveData() {
             let formData = new FormData();
+            let mediaLength = $('.media-ids').length;
+
+            if (mediaLength == 0) {
+                swal({
+                    title: 'Warning',
+                    text: 'Please add media',
+                    icon: 'warning',
+                    closeOnClickOutside: false,
+                    closeOnEsc: false
+                }).then(() => {
+                    return;
+                });
+                return;
+            }
 
             $('.media-ids').each(function () {
                 formData.append("MediaIds[]", $(this).val());
@@ -184,7 +221,7 @@
             formData.append("FontSize", $('#fontSize').val());
             formData.append("TextSpeed", $('#textSpeed').val());
 
-            await submitFormData(formData, `${baseUrlApi}/Signage`);
+            await submitFormData(formData, `${baseUrlApi}/Signage`, 'POST', `/Signage/Index`);
         }
     </script>
 }
