@@ -19,9 +19,6 @@ public class CookieService(IHttpContextAccessor httpContextAccessor) : ICookieSe
     public string Get()
     {
         var token = _httpContextAccessor.HttpContext?.Request.Cookies["token_key"];
-        Console.WriteLine("+========================+");
-        Console.WriteLine($"token key: {token}");
-        Console.WriteLine("+========================+");
         return string.IsNullOrEmpty(token) ? throw UserException.UserUnauthorizedException() : token;
     }
 }

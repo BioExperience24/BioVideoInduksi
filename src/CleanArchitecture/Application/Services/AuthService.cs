@@ -66,11 +66,6 @@ public class AuthService(IUnitOfWork unitOfWork,
     public async Task<UserProfileResponse> UpdateProfile(UserProfileUpdateRequest request, CancellationToken token)
     {
         var userId = _currentUser.GetCurrentUserId();
-
-        Console.WriteLine("+========================+");
-        Console.WriteLine($"User id: {userId}");
-        Console.WriteLine("+========================+");
-
         var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
         user.Name = request.Name;
         user.UserName = request.UserName;

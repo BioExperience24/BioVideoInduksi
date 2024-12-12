@@ -32,11 +32,18 @@ async function loadData(url) {
 
 		return await response.json();
 	} catch (error) {
+		if (error.status === 401) logout();
 		window.location.href = "/Error";
 	}
 }
 
-function submitFormData(formData, url, method = "POST", redirectUrl = "", contentType = false) {
+function submitFormData(
+	formData,
+	url,
+	method = "POST",
+	redirectUrl = "",
+	contentType = false
+) {
 	$.ajax({
 		url: url,
 		type: method,
@@ -67,6 +74,29 @@ function submitFormData(formData, url, method = "POST", redirectUrl = "", conten
 				});
 			}
 		},
+		error: function (xhr) {
+			if (xhr.status === 401) logout();
+			if (xhr.status === 400) {
+				const errors = xhr.responseJSON?.errors || {};
+
+				let errorMessages = "";
+				for (let field in errors) {
+					const fieldErrors = errors[field].join(" ");
+					errorMessages += `<strong>${field}:</strong> ${fieldErrors}<br>`;
+				}
+
+				swal({
+					title: "Validation Errors",
+					content: {
+						element: "div",
+						attributes: {
+							innerHTML: errorMessages,
+						},
+					},
+					icon: "error",
+				});
+			}
+		},
 	});
 }
 
@@ -94,6 +124,7 @@ async function editData(url) {
 
 		return await response.json();
 	} catch (error) {
+		if (error.status === 401) logout();
 		swal.close();
 
 		return null;
@@ -124,6 +155,7 @@ async function getDataById(url) {
 
 		return await response.json();
 	} catch (error) {
+		if (error.status === 401) logout();
 		swal.close();
 
 		return null;
@@ -171,9 +203,9 @@ function deleteData(url) {
 	});
 }
 
-function logout() {
+async function logout() {
 	localStorage.removeItem("_token");
-	setCookie(null);
+	await setCookie(null);
 	window.location.href = "/login";
 }
 
@@ -208,18 +240,12 @@ function login() {
 		});
 }
 
-function logout() {
-	localStorage.removeItem("_token");
-	setCookie("");
-	window.location.href = "/login";
-}
-
-function setCookie(token) {
+async function setCookie(token) {
 	if (token) {
 		document.cookie = `token_key=${token}; path=/; secure; samesite=strict`;
 	} else {
 		let date = new Date();
 		date.setTime(date.getTime() - 24 * 60 * 60 * 1000);
-		document.cookie = `token_key=; expires=${date.toUTCString()}; path=/; secure; samesite=strict`;
+		document.cookie = `token_key=token; expires=${date.toUTCString()}; path=/; secure; samesite=strict`;
 	}
 }

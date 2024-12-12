@@ -74,20 +74,20 @@
             .then((res) => {
                 if (res.count > 0) {
                     datatable.clear();
-                    
+
                     res.collection.forEach((item, index) => {
                         datatable.row.add([
-                            index + 1, 
-                            item.name, 
-                            item.mediaType, 
+                            index + 1,
+                            item.name,
+                            item.mediaType,
                             item.size,
                             item.duration,
                             `<button class="btn btn-primary" onclick="editMedia(${item.id})">
-                                    <i class="fa fa-edit"></i>
-                                </button>
-                                <button class="btn btn-danger" onclick="deleteMedia(${item.id})">
-                                    <i class="fa fa-trash"></i>
-                                </button>`
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-danger" onclick="deleteMedia(${item.id})">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>`
                         ]);
                     });
 
@@ -119,9 +119,9 @@
 
         function editMedia(mediaId) {
             editData(`${baseUrlApi}/Media/${mediaId}`)
-            .then((result) => {
-                showMedia(result)
-            })
+                .then((result) => {
+                    showMedia(result)
+                })
         }
 
         function saveMedia() {

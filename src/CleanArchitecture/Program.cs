@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using CleanArchitecture.Infrastructure.Data;
 using AutoMapper;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace CleanArchitecture.Frontend;
 
@@ -23,6 +24,18 @@ public class Program
                 {
                     policy.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
                 });
+        });
+
+        // form data size
+        builder.Services.Configure<FormOptions>(options =>
+        {
+            options.MultipartBodyLengthLimit = 1L * 1024 * 1024 * 1024; // 1 GB
+        });
+
+        // Konfigurasi Kestrel file upload
+        builder.WebHost.ConfigureKestrel(options =>
+        {
+            options.Limits.MaxRequestBodySize = 1L * 1024 * 1024 * 1024; // 1 GB
         });
 
         // Konfigurasi backend (API)

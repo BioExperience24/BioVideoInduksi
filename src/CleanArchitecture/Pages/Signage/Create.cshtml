@@ -130,12 +130,14 @@
             .then((res) => {
                 $('#mediaContent').html('');
                 let data = res.collection;
+                $('#mediaContent').append('<option value="" disabled selected>Select Media</option>');
                 for (let i = 0; i < res.count; i++) {
                     $('#mediaContent').append(`<option value="${data[i].id}">${data[i].name}</option>`);
                 }
 
                 $('#mediaContent').select2({
-                    placeholder: 'Select Media'
+                    placeholder: 'Select Media',
+                    allowClear: true
                 });
 
                 // select media on change
@@ -149,7 +151,6 @@
             
             getDataById(`${baseUrlApi}/Media/${mediaId}`)
                 .then((result) => {
-                    console.log(result);
                     addMediaContent(result);
                     $('#mediaContainer').css('display', 'block');
                     $('#mediaContent').val('').trigger('change');

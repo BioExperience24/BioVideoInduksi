@@ -1,0 +1,98 @@
+@page
+@model CleanArchitecture.Pages.DisplayTablet.Index
+
+<div class="row mb-2">
+    <div class="col-12 text-right">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalShow">
+            <i class="fa fa-plus"></i> Create
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-title pt-2">List Display Tablet</h3>
+            </div>
+            <div class="card-body py-0">
+                <div class="table-responsive">
+                    <table class="table table-bordered datatable">
+                        <thead>
+                            <tr>
+                                <th width="5%" class="text-center">No</th>
+                                <th>Name</th>
+                                <th>Pair Code</th>
+                                <th>Status</th>
+                                <th class="text-center" width="20%">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalShow" tabindex="-1" role="dialog" aria-labelledby="modalShowLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalShowLabel">Form Display Tablet</h5>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createMediaForm">
+                    <input type="hidden" id="mediaId">
+                    <div class="form-group mb-3">
+                        <label for="name">Name</label><span class="text-danger">*</span>
+                        <input type="text" class="form-control" id="name" placeholder="Enter name" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="pairCode">Pair Code</label><span class="text-danger">*</span>
+                        <input type="text" class="form-control" id="pairCode" placeholder="Enter Pair Code" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="description">Description</label>
+                        <textarea id="description" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="status">Status</label><span class="text-danger">*</span>
+                        <select id="status" class="form-control" onchange="changeStatus(this.value)">
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-3 disable-wrap" style="display: none;">
+                        <label for="disableReason">Disable Reason</label>
+                        <textarea id="disableReason" class="form-control"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="saveDisplayTablet()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function changeStatus(value) {
+            if (value == 0) {
+                $('.disable-wrap').show();
+                $('#disableReasone').val('');
+            } else {
+                $('.disable-wrap').hide();
+            }
+        }
+
+        function saveDisplayTablet() {
+
+        }
+    </script>
+}
