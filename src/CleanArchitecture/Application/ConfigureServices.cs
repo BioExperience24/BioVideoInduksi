@@ -24,6 +24,7 @@ public static class ConfigureServices
         services.AddScoped<IPlayerService, PlayerService>();
         services.AddScoped<IPublishService, PublishService>();
         services.AddScoped<ICheckService, CheckService>();
+        services.AddScoped<ICountService, CountService>();
         services.AddScoped<IFileUploadService, FileUploadService>();
 
         services.AddSingleton<ICurrentTime, CurrentTime>();
@@ -64,6 +65,7 @@ public static class ConfigureServices
         services.AddScoped<IPlayerGroupService, PlayerGroupService>();
         services.AddScoped<IPlayerService, PlayerService>();
         services.AddScoped<IPublishService, PublishService>();
+        services.AddScoped<ICountService, CountService>();
         services.AddScoped<IFileUploadService, FileUploadService>();
     }
 

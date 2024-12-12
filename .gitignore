@@ -485,6 +485,5 @@ $RECYCLE.BIN/
 .vscode
 
 /src/CleanArchitecture/wwwroot/uploads/*
-/src/CleanArchitecture.Frontend/wwwroot/uploads/*
 /src/CleanArchitecture/appsettings.Development.json
 /src/CleanArchitecture/appsettings.docker.json

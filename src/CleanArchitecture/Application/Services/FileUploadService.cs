@@ -119,6 +119,37 @@ namespace CleanArchitecture.Application.Services
             };
         }
 
+        public string GetStorageUsage()
+        {
+            var directoryPath = Path.GetFullPath(_configuration["UploadSettings:Directory"], Directory.GetCurrentDirectory());
+
+            if (!Directory.Exists(directoryPath))
+                return "0 MB";
+
+            // Menghitung total ukuran semua file dalam direktori (termasuk subdirektori)
+            var files = Directory.GetFiles(directoryPath, "*", SearchOption.AllDirectories);
+            long totalBytes = files.Sum(file => new FileInfo(file).Length);
+
+            // Konversi ukuran ke format yang lebih mudah dibaca (MB)
+            return ConvertBytesToReadableSize(totalBytes);
+        }
+
+        private string ConvertBytesToReadableSize(long bytes)
+        {
+            const int scale = 1024;
+            string[] units = { "B", "KB", "MB", "GB", "TB" };
+            double size = bytes;
+            int unitIndex = 0;
+
+            while (size >= scale && unitIndex < units.Length - 1)
+            {
+                size /= scale;
+                unitIndex++;
+            }
+
+            return $"{size:F2} {units[unitIndex]}";
+        }
+
         private static string GetVideoDuration(string filePath)
         {
             try

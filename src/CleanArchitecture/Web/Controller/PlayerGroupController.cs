@@ -12,15 +12,18 @@ public class PlayerGroupController(IPlayerGroupService playerGroupService) : Bas
     private readonly IPlayerGroupService _playerGroupService = playerGroupService;
 
     [HttpGet("{id}")]
+    [Authorize]
     public async Task<IActionResult> Get(int id) => Ok(await _playerGroupService.Get(id));
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetAll(int pageIndex = 0, int pageSize = 50)
     {
         return Ok(await _playerGroupService.GetCollection(pageIndex, pageSize));
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Add([FromForm] PlayerGroupAddRequest request, [FromServices] IValidator<PlayerGroupAddRequest> validator, CancellationToken token)
     {
         var validationResult = await validator.ValidateAsync(request, token);
@@ -34,6 +37,7 @@ public class PlayerGroupController(IPlayerGroupService playerGroupService) : Bas
     }
 
     [HttpPut]
+    [Authorize]
     public async Task<IActionResult> Update([FromForm] PlayerGroupUpdateRequest request, [FromServices] IValidator<PlayerGroupUpdateRequest> validator, CancellationToken token)
     {
         var validationResult = await validator.ValidateAsync(request, token);
@@ -48,6 +52,7 @@ public class PlayerGroupController(IPlayerGroupService playerGroupService) : Bas
     }
 
     [HttpDelete]
+    [Authorize]
     public async Task<IActionResult> Delete(int id, CancellationToken token)
     {
         await _playerGroupService.Delete(id, token);

@@ -6,7 +6,7 @@ namespace CleanArchitecture.Web.Requests;
 public abstract class PublishRequest
 {
     [Required]
-    public DateTime PublishDate { get; set; }
+    public DateTime PublishDate { get; set; } = DateTime.UtcNow;
 
     [Required]
     public string PublishType { get; set; }

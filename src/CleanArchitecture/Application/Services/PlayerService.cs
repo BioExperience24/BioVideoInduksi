@@ -46,6 +46,12 @@ public class PlayerService(
     public async Task<Player> Get(int id)
     {
         var data = await _unitOfWork.PlayerRepository.FirstOrDefaultAsync(x => x.Id == id, include: x => x.Include(x => x.PlayerGroup));
+
+        if (data == null)
+        {
+            throw new Exception("Player not found");
+        }
+
         return data;
     }
 
@@ -79,6 +85,8 @@ public class PlayerService(
     {
         var data = await _unitOfWork.PlayerRepository.FirstOrDefaultAsync(x => x.Id == id);
 
-        await _unitOfWork.ExecuteTransactionAsync(() => _unitOfWork.PlayerRepository.Delete(data), token);
+        data.DeletedAt = DateTime.UtcNow;
+
+        await _unitOfWork.ExecuteTransactionAsync(() => _unitOfWork.PlayerRepository.Update(data), token);
     }
 }

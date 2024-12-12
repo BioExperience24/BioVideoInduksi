@@ -28,8 +28,29 @@ public class AuthController(IAuthService userWriteService) : BaseController
     public async Task<IActionResult> RefreshToken()
         => Ok(await _userService.RefreshToken());
 
+
+    [HttpPost("change-password")]
+    [Authorize]
+    public async Task<IActionResult> ChangePassword(UserChangePasswordRequest request, CancellationToken token)
+        => Ok(await _userService.ChangePassword(request, token));
+
+
+    [HttpPut("update-profile")]
+    [Authorize]
+    public async Task<IActionResult> UpdateProfile(UserProfileUpdateRequest request, CancellationToken token)
+    {
+        return Ok(await _userService.UpdateProfile(request, token));
+    }
+
     [HttpGet("profile")]
     [Authorize]
     public async Task<IActionResult> GetProfile()
         => Ok(await _userService.GetProfile());
+
+    [HttpGet("check-token")]
+    [Authorize]
+    public IActionResult CheckToken()
+    {
+        return Ok(true);
+    }
 }

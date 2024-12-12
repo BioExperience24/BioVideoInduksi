@@ -63,6 +63,43 @@ public class AuthService(IUnitOfWork unitOfWork,
         return response;
     }
 
+    public async Task<UserProfileResponse> UpdateProfile(UserProfileUpdateRequest request, CancellationToken token)
+    {
+        var userId = _currentUser.GetCurrentUserId();
+
+        Console.WriteLine("+========================+");
+        Console.WriteLine($"User id: {userId}");
+        Console.WriteLine("+========================+");
+
+        var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+        user.Name = request.Name;
+        user.UserName = request.UserName;
+
+        await _unitOfWork.ExecuteTransactionAsync(() => _unitOfWork.UserRepository.Update(user), token);
+
+        var userUpdate = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+
+        return _mapper.Map<UserProfileResponse>(userUpdate);
+    }
+
+    public async Task<UserProfileResponse> ChangePassword(UserChangePasswordRequest request, CancellationToken token)
+    {
+        var userId = _currentUser.GetCurrentUserId();
+        var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+
+        if (!StringHelper.Verify(request.OldPassword, user.Password))
+        {
+            throw UserException.BadRequestException(UserErrorMessage.PasswordIncorrect);
+        }
+
+        user.Password = request.NewPassword.Hash();
+        await _unitOfWork.ExecuteTransactionAsync(() => _unitOfWork.UserRepository.Update(user), token);
+
+        var userUpdate = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+
+        return _mapper.Map<UserProfileResponse>(userUpdate);
+    }
+
     public void Logout()
     {
         System.Diagnostics.Debug.WriteLine("log data here");

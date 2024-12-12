@@ -31,14 +31,9 @@ This project serves as a template for building a Clean Architecture Web API in A
 
    - Copy file `appsettings.Development copy.json` to `appsettings.Development.json` for Development
 
-   - Running project backend bash terminal
+   - Running the project
 
      ```bash
      dotnet run ./src/CleanArchitecture/CleanArchitecture.csproj
      ```
 
-   - Running project frontend bash terminal
-
-      ```bash
-      dotnet run ./src/CleanArchitecture.Frontend/CleanArchitecture.csproj
-      ```

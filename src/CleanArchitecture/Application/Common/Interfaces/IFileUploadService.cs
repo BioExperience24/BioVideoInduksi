@@ -10,5 +10,7 @@ namespace CleanArchitecture.Application.Common.Interfaces
         MediaType? GetMediaTypeFromContentType(string contentType);
 
         Task DeleteFileAsync(string filePath, CancellationToken token); 
+
+        string GetStorageUsage();
     }
 }

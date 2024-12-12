@@ -1,0 +1,173 @@
+@page
+@model CleanArchitecture.Pages.Player.Index
+
+@section Styles {
+    <link href="~/theme/css/select2.min.css" rel="stylesheet" />
+}
+
+<div class="row mb-2">
+    <div class="col-12 text-right">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalShow">
+            <i class="fa fa-plus"></i> Create
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-title pt-2">List @ViewData["Title"]</h3>
+            </div>
+            <div class="card-body py-0">
+                <div class="table-responsive">
+                    <table class="table table-bordered datatable">
+                        <thead>
+                            <tr>
+                                <th width="5%" class="text-center">No</th>
+                                <th>Player Name</th>
+                                <th>Serial</th>
+                                <th>Player Group</th>
+                                <th>Live</th>
+                                <th class="text-center" width="15%">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalShow" tabindex="-1" role="dialog" aria-labelledby="modalShowLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalShowLabel">Player</h5>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createPlayerForm">
+                    <input type="hidden" id="playerId">
+                    <div class="form-group mb-3">
+                        <label for="playerName">Name</label><span class="text-danger">*</span>
+                        <input type="text" class="form-control" id="playerName" placeholder="Enter Player name"
+                            required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="serial">Serial</label><span class="text-danger">*</span>
+                        <input type="text" class="form-control" id="serial" placeholder="Enter Serial" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerGroupId">Player Group</label><span class="text-danger">*</span>
+                        <select class="form-control" id="playerGroupId" required style="width: 100%">
+
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="savePlayer()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/theme/js/select2.min.js"></script>
+    <script>
+        // load player datatable
+        loadData(`${baseUrlApi}/Player`)
+            .then((res) => {
+                if (res.count > 0) {
+                    datatable.clear();
+
+                    res.collection.forEach((item, index) => {
+                        datatable.row.add([
+                            index + 1,
+                            item.name,
+                            item.serial,
+                            item.playerGroup.name,
+                            item.publish ? '<span class="badge badge-success">Live</span>' : '<span class="badge badge-danger">Offline</span>',
+                            `<button class="btn btn-primary" onclick="editPlayer(${item.id})">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger" onclick="deletePlayer(${item.id})">
+                                    <i class="fa fa-trash"></i>
+                                </button>`
+                        ]);
+                    });
+
+                    datatable.draw();
+                } else {
+                    datatable.clear().draw();
+                }
+            });
+
+        // load playerGroups to select
+        loadData(`${baseUrlApi}/PlayerGroup`)
+            .then((res) => {
+                if (res.count > 0) {
+                    let select = $('#playerGroupId');
+                    
+                    res.collection.forEach((item) => {
+                        let option = `<option value="${item.id}">${item.name}</option>`;
+                        select.append(option);
+                    });
+
+                    // select2 and add class form-control
+                    select.select2({
+                        placeholder: 'Select Player Group',
+                    });
+                }
+            });
+
+
+        function deletePlayer(id) {
+            deleteData(`${baseUrlApi}/Player?id=${id}`);
+        }
+
+        function showPlayer(result) {
+            $('#playerName').val(result.name);
+            $('#playerId').val(result.id);
+            $('#serial').val(result.serial);
+            $('#playerGroupId').val(result.playerGroupId).trigger('change');
+            $('#modalShow').modal('show');
+            $('#modalShowLabel').text('Edit Player ');
+
+            $('#playerGroupId').select2({
+                placeholder: 'Select Player Group'
+            })
+        }
+
+        function editPlayer(playerId) {
+            editData(`${baseUrlApi}/Player/${playerId}`)
+                .then((res) => {
+                    showPlayer(res);
+                });
+        }
+
+        function savePlayer() {
+            let playerName = $('#playerName').val();
+            let id = $('#playerId').val();
+            let method = 'POST';
+            let formData = new FormData();
+
+            if (id != '') {
+                formData.append("Id", id);
+                method = 'PUT';
+            }
+
+            formData.append("Name", playerName);
+            formData.append("Serial", $('#serial').val());
+            formData.append("PlayerGroupId", $('#playerGroupId').val());
+
+            submitFormData(formData, `${baseUrlApi}/Player`, method);
+        }
+    </script>
+}

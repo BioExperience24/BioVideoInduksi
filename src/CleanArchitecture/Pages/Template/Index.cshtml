@@ -1,0 +1,111 @@
+@page
+@model CleanArchitecture.Frontend.Pages.Template.Index
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-title pt-2">List @ViewData["Title"]</h3>
+            </div>
+            <div class="card-body py-0">
+                <div class="table-responsive">
+                    <table class="table table-bordered datatable">
+                        <thead>
+                            <tr>
+                                <th width="5%" class="text-center">No</th>
+                                <th>Name</th>
+                                <th>Orientation</th>
+                                <th class="text-center" width="5%">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalShow" tabindex="-1" role="dialog" aria-labelledby="modalShowLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalShowLabel">Edit Template</h5>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createMediaForm">
+                    <input type="hidden" id="id">
+                    <div class="form-group mb-3">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" placeholder="Enter name" required>
+                    </div>
+                    <div class="form-group mb-3" id="template-show">
+                        <label for="template">Template</label>
+                        <img src="~/theme/images/template.png" class="img-fluid" alt="">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="saveData()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        // load template
+        loadData(`${baseUrlApi}/Template`)
+            .then((res) => {
+                if (res.count > 0) {
+                    datatable.clear();
+
+                    res.collection.forEach((item, index) => {
+                        datatable.row.add([
+                            index + 1,
+                            item.name,
+                            item.orientation,
+                            `<button class="btn btn-primary" onclick="editTemplate('${item.id}')">
+                                    <i class="fa fa-edit"></i>
+                                </button>`
+                        ]);
+                    })
+
+                    datatable.draw();
+                } else {
+                    datatable.clear().draw();
+                }
+            });
+
+        // edit name
+        function editTemplate(id) {
+            editData(`${baseUrlApi}/Template/${id}`)
+                .then((res) => {
+                    showData(res);
+                });
+        }
+
+        function showData(result) {
+            $('#name').val(result.name);
+            $('#id').val(result.id);
+            $('#modalShow').modal('show');
+        }
+
+        function saveData() {
+            let name = $('#name').val();
+            let id = $('#id').val();
+            let formData = new FormData();
+
+            formData.append("Name", name);
+            formData.append("Id", id);
+
+            submitFormData(formData, `${baseUrlApi}/Template`, 'PUT');
+        }
+    </script>
+}

@@ -1,0 +1,261 @@
+@page "/Signage/Edit/{id}"
+@model CleanArchitecture.Frontend.Pages.Signage.Edit
+
+@section Styles {
+    <link href="~/theme/css/select2.min.css" rel="stylesheet" />
+}
+
+<div class="row">
+    <div class="col-12">
+        <h3 class="text-title">@ViewData["Title"]</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <form action="" method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-group mb-3">
+                                <label for="signageName">Signage Name</label><span class="text-danger">*</span>
+                                <input type="text" name="SignageName" id="signageName" class="form-control">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="signageTemplate">Signage Template</label><span class="text-danger">*</span>
+                                <select name="signageTemplate" id="signageTemplate" class="form-control"
+                                    style="width: 100%;">
+                                </select>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="mediaContent">Media Content</label><span class="text-danger">*</span>
+                                <div class="input-group">
+                                    <!-- Dropdown -->
+                                    <select name="mediaContent" id="mediaContent" class="form-control select2">
+                                    </select>
+
+                                    <!-- Button -->
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-primary" onclick="addMedia()">Add
+                                            Media</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="runningText">Running Text</label><span class="text-danger">*</span>
+                                <textarea name="runningText" id="runningText" rows="3" class="form-control"></textarea>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group mb-3">
+                                        <label for="backgroundColor">Background Color</label><span
+                                            class="text-danger">*</span>
+                                        <input type="color" name="backgroundColor" id="backgroundColor"
+                                            class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group mb-3">
+                                        <label for="textColor">Text Color</label><span class="text-danger">*</span>
+                                        <input type="color" name="textColor" id="textColor" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group mb-3">
+                                        <label for="fontSize">Font Size</label><span class="text-danger">*</span>
+                                        <input type="number" name="fontSize" id="fontSize" class="form-control" min="1"
+                                            value="12">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="textSpeed">Text Speed</label><span class="text-danger">*</span>
+                                        <input type="number" name="textSpeed" id="textSpeed" class="form-control"
+                                            min="0" value="5">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 text-right">
+                                    <a href="javascript:history.back()" class="btn btn-secondary text-white">Back</a>
+                                    <button type="button" class="btn btn-primary" onclick="saveData()">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-sm-6">
+                    <div class="card" style="display: none;" id="mediaContainer">
+                        <div class="card-body h-100">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table table-bordered table-striped">
+                                        <tbody id="mediaTable">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/theme/js/select2.min.js"></script>
+    <script type="text/javascript">
+        var mediaId = '';
+
+        // load template
+        loadData(`${baseUrlApi}/Template`)
+            .then((res) => {
+                $('#signageTemplate').html('');
+                let data = res.collection;
+                for (let i = 0; i < res.count; i++) {
+                    $('#signageTemplate').append(`<option value="${data[i].id}">${data[i].name}</option>`);
+                }
+            });
+
+        // load media
+        loadData(`${baseUrlApi}/Media`)
+            .then((res) => {
+                $('#mediaContent').html('');
+                let data = res.collection;
+                for (let i = 0; i < res.count; i++) {
+                    $('#mediaContent').append(`<option value="${data[i].id}">${data[i].name}</option>`);
+                }
+
+                $('#mediaContent').select2({
+                    placeholder: 'Select Media'
+                });
+
+                // select media on change
+                $('#mediaContent').on('change', function () {
+                    mediaId = this.value;
+                });
+            });
+
+
+        // load signage
+        loadData(`${baseUrlApi}/Signage/${@ViewData["Id"]}`)
+            .then((res) => {
+                showEditData(res);
+s
+                swal({
+                    title: 'Error',
+                    text: 'Failed to fetch data',
+                    icon: 'error',
+                    closeOnClickOutside: false,
+                    closeOnEsc: false
+                })
+                    .then(() => {
+                        window.location.href = '/Signage/Index';
+                    });
+            });
+
+
+        function addMedia() {
+            if (mediaId == '')  return;
+            getDataById(`${baseUrlApi}/Media/${mediaId}`)
+                .then((result) => {
+                    addMediaContent(result);
+                    $('#mediaContainer').css('display', 'block');
+                    $('#mediaContent').val('').trigger('change');
+                    mediaId = '';
+                });
+        }
+
+        function selectMedia(id) {
+            mediaId = id;
+        }
+
+        function showEditData(result) {
+            $('#signageName').val(result.name);
+            $('#signageTemplate').val(result.templateId).trigger('change');
+
+            let contents = JSON.parse(result.content);
+            let contentsMedia = contents.content1.content;
+            let contentText = contents.content2;
+
+            for (let i = 0; i < contentsMedia.length; i++) {
+                addMediaContent(contentsMedia[i]);
+            }
+
+            $('#runningText').val(contentText.content);
+            $('#textColor').val(contentText.option.color);
+            $('#backgroundColor').val(contentText.option.bgcolor);
+            $('#fontSize').val(contentText.option.size);
+            $('#textSpeed').val(contentText.option.speed);
+
+            $('#mediaContainer').css('display', 'block');
+        }
+
+        function addMediaContent(result) {
+            let content = `<tr>
+                    <td>
+                        <input type="hidden" class="media-ids" value="${result.id}">
+                        ${result.name} <br>
+                        Type: ${result.mediaType || result.type}
+                    </td>
+                    <td>
+                        ${contentMediaShow(result)}
+                    </td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-danger" onclick="removeMedia(${result.id})">&times;</button>
+                    </td>
+                </tr>`;
+
+            $('#mediaTable').append(content);
+        }
+
+        function removeMedia(id) {
+            $('.media-ids').each(function () {
+                if ($(this).val() == id) {
+                    $(this).parent().parent().remove();
+                }
+            });
+
+            if ($('.media-ids').length == 0) {
+                $('#mediaContainer').css('display', 'none');
+                $('#mediaTable').html('');
+            }
+        }
+
+        function contentMediaShow(result) {
+            if (result.type == "Image") {
+                return `<img src="${result.path}" style="width: 100px">`;
+            } else {
+                return `<video src="${result.path}" controls style="width: 100px"></video>`;
+            }
+        }
+
+        async function saveData() {
+            let formData = new FormData();
+
+            $('.media-ids').each(function () {
+                formData.append("MediaIds[]", $(this).val());
+            });
+            formData.append("Id", '@ViewData["Id"]');
+            formData.append("Name", $('#signageName').val());
+            formData.append("TemplateId", $('#signageTemplate').val());
+            formData.append("RunningText", $('#runningText').val());
+            formData.append("TextColor", $('#textColor').val());
+            formData.append("BackgroundColor", $('#backgroundColor').val());
+            formData.append("FontSize", $('#fontSize').val());
+            formData.append("TextSpeed", $('#textSpeed').val());
+
+            await submitFormData(formData, `${baseUrlApi}/Signage`, 'PUT', '/Signage/Index');
+        }
+
+    </script>
+}

@@ -1,5 +1,4 @@
 using CleanArchitecture.Application.Common.Models;
-using CleanArchitecture.Application.Common.Models.Player;
 
 namespace CleanArchitecture.Application.Common.Interfaces;
 
