@@ -9,7 +9,7 @@ public class SignageResponse : BaseModel
     public string Content { get; set; } = string.Empty;
     public int TemplateId { get; set; } = 0;
     public TemplateResponse? Template { get; set; }
-    public DateTime? CreatedAt { get; set; } = DateTime.Now;
-    public DateTime? UpdatedAt { get; set; } = DateTime.Now;
+    public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? DeletedAt { get; set; } = null;
 }

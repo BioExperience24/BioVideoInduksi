@@ -213,6 +213,15 @@ function login() {
 	const username = document.getElementById("username").value;
 	const password = document.getElementById("password").value;
 
+	swal({
+        title: "Logging in...",
+        text: "Please wait while we authenticate you.",
+        icon: "info",
+        buttons: false,
+        closeOnClickOutside: false,
+        closeOnEsc: false,
+    });
+
 	fetch(`${baseUrlApi}/Auth/sign-in`, {
 		method: "POST",
 		headers: {
@@ -240,6 +249,12 @@ function login() {
 		});
 }
 
+function checkEnter(event) {
+	if (event.key === "Enter") {
+		login();
+	}
+}
+
 async function setCookie(token) {
 	if (token) {
 		document.cookie = `token_key=${token}; path=/; secure; samesite=strict`;
@@ -249,3 +264,23 @@ async function setCookie(token) {
 		document.cookie = `token_key=token; expires=${date.toUTCString()}; path=/; secure; samesite=strict`;
 	}
 }
+
+function checkLoginStatus() {
+	const token = localStorage.getItem("_token") || getCookie("token_key");
+
+	if (!token && window.location.pathname !== "/login") {
+		window.location.href = "/login";
+	}
+
+	if (token && window.location.pathname === "/login") {
+		window.location.href = "/";
+	}
+}
+
+function getCookie(name) {
+	const value = `; ${document.cookie}`;
+	const parts = value.split(`; ${name}=`);
+	if (parts.length === 2) return parts.pop().split(";").shift();
+}
+
+checkLoginStatus();

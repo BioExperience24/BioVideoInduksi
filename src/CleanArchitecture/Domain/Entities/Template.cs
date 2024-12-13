@@ -13,7 +13,7 @@ public class Template : BaseModel
     [Column(TypeName="ntext")]
     [MaxLength]
     public string Layout { get; set; } = string.Empty;
-    public DateTime? CreatedAt { get; set; } = DateTime.Now;
-    public DateTime? UpdatedAt { get; set; } = DateTime.Now;
+    public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? DeletedAt { get; set; } = null;
 }

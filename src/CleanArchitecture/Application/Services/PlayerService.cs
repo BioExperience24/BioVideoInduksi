@@ -37,7 +37,6 @@ public class PlayerService(
             filter: x => x.DeletedAt == null,
             include: query => query
                 .Include(x => x.PlayerGroup)
-                .Include(x => x.Publish)
         );
 
        return data;

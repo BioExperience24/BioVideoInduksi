@@ -9,7 +9,7 @@ public class User : BaseModel
     public string UserName { get; set; } = string.Empty;
     public Role? Role { get; set; }
     public string Password { get; set; } = string.Empty;
-    public DateTime? CreatedAt { get; set; } = DateTime.Now;
-    public DateTime? UpdatedAt { get; set; } = DateTime.Now;
+    public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? DeletedAt { get; set; } = null;
 }

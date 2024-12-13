@@ -12,8 +12,8 @@ public class Player : BaseModel
 
     [ForeignKey(nameof(PlayerGroupId))]
     public PlayerGroup? PlayerGroup { get; set; }
-    public Publish? Publish { get; set; }
-    public DateTime? CreatedAt { get; set; } = DateTime.Now;
-    public DateTime? UpdatedAt { get; set; } = DateTime.Now;
+    public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? DeletedAt { get; set; } = null;
+    public DateTime? PlayerLiveAt { get; set; } = null;
 }

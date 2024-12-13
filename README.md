@@ -30,6 +30,12 @@ This project serves as a template for building a Clean Architecture Web API in A
 2. Run project:
 
    - Copy file `appsettings.Development copy.json` to `appsettings.Development.json` for Development
+   
+   - Migrate database
+   
+   ```bash
+   dotnet ef database update --context ApplicationDbContext
+   ```
 
    - Running the project
 

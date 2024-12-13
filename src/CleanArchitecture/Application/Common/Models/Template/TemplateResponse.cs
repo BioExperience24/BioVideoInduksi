@@ -10,7 +10,7 @@ public class TemplateResponse : BaseModel
     public string Scale { get; set; } = string.Empty;
     public string Orientation { get; set; } = string.Empty;
     public string Layout { get; set; } = string.Empty;
-    public DateTime? CreatedAt { get; set; } = DateTime.Now;
-    public DateTime? UpdatedAt { get; set; } = DateTime.Now;
+    public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? DeletedAt { get; set; } = null;
 }

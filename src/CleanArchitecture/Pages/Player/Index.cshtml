@@ -88,18 +88,43 @@
                     datatable.clear();
 
                     res.collection.forEach((item, index) => {
+                        let playerLiveAt = item.playerLiveAt != null ? moment.utc(item.playerLiveAt) : null;
+                        let status = 'Not Alive';
+
+                        if (playerLiveAt) {
+                            let now = moment.utc();
+                            // Menampilkan waktu untuk debugging
+                            console.log('Now:', now.format('YYYY-MM-DD HH:mm:ss'));
+                            console.log('PlayerLiveAt:', playerLiveAt.format('YYYY-MM-DD HH:mm:ss'));
+                            
+                            let timeDifferenceInMilliseconds = now.diff(playerLiveAt);
+                            let timeDifferenceInSeconds = timeDifferenceInMilliseconds / 1000;
+                            let timeDifferenceInMinutes = timeDifferenceInSeconds / 60;
+
+                            // console.log('Time Difference (in milliseconds):', timeDifferenceInMilliseconds);
+                            // console.log('Time Difference (in seconds):', timeDifferenceInSeconds);
+                            // console.log('Time Difference (in minutes):', timeDifferenceInMinutes);
+
+                            if (timeDifferenceInMinutes < 3) {
+                                status = 'Live';
+                            } else {
+                                status = 'Not Alive';
+                            }
+                        }
+
                         datatable.row.add([
                             index + 1,
                             item.name,
                             item.serial,
                             item.playerGroup.name,
-                            item.publish ? '<span class="badge badge-success">Live</span>' : '<span class="badge badge-danger">Offline</span>',
+                            status == 'Live' ? '<span class="badge badge-success text-white">Live</span>' : '<span class="badge badge-danger text-white">Offline</span>',
+
                             `<button class="btn btn-primary" onclick="editPlayer(${item.id})">
-                                    <i class="fa fa-edit"></i>
-                                </button>
-                                <button class="btn btn-danger" onclick="deletePlayer(${item.id})">
-                                    <i class="fa fa-trash"></i>
-                                </button>`
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-danger" onclick="deletePlayer(${item.id})">
+                                                <i class="fa fa-trash"></i>
+                                            </button>`
                         ]);
                     });
 
@@ -114,7 +139,7 @@
             .then((res) => {
                 if (res.count > 0) {
                     let select = $('#playerGroupId');
-                    
+
                     res.collection.forEach((item) => {
                         let option = `<option value="${item.id}">${item.name}</option>`;
                         select.append(option);

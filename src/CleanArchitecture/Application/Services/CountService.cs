@@ -19,14 +19,17 @@ public class CountService : ICountService
 
     public async Task<CountResponse> Show()
     {
+        var now = DateTime.UtcNow;
+        var before3Minutes = now.AddMinutes(-3);
+
         return new CountResponse
         {
             Player = await _unitOfWork.PlayerRepository.CountAsync(x => x.DeletedAt == null),
             Signage = await _unitOfWork.SignageRepository.CountAsync(x => x.DeletedAt == null),
             PlayerLive = await _unitOfWork.PlayerRepository.CountAsync(
                 x => x.DeletedAt == null &&
-                     x.Publish != null &&
-                     x.Publish.PublishType == "Live"
+                     x.PlayerLiveAt != null && 
+                     x.PlayerLiveAt >= before3Minutes
             ),
             StorageUsage = _fileUploadService.GetStorageUsage()
         };

@@ -10,8 +10,8 @@ public class PlayerResponse : BaseModel
     public string Serial { get; set; } = string.Empty;
     public int PlayerGroup_Id { get; set; } = 0;
     public PlayerGroupResponse? PlayerGroup { get; set; }
-    public PublishResponse? Publish { get; set; }
-    public DateTime? CreatedAt { get; set; } = DateTime.Now;
-    public DateTime? UpdatedAt { get; set; } = DateTime.Now;
-    public DateTime? DeletedAt { get; set; } = null;
+    public DateTime? CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+    public DateTime? DeletedAt { get; set; }
+    public DateTime? PlayerLiveAt { get; set; }
 }

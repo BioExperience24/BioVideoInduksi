@@ -7,13 +7,9 @@ namespace CleanArchitecture.Domain.Entities;
 
 public class Publish : BaseModel
 {
-    public DateTime? PublishDate {get; set;} = DateTime.Now;
+    public DateTime? PublishDate {get; set;} = DateTime.UtcNow;
 
     public string PublishType { get; set; }
-    
-    public DateTime? StartTime { get; set; }
-    
-    public DateTime? EndTime { get; set; }
     
     public string Status { get; set; } = string.Empty;
     
@@ -28,9 +24,9 @@ public class Publish : BaseModel
     [ForeignKey(nameof(SignageId))]
     public Signage? Signage { get; set; }
     
-    public DateTime? CreatedAt { get; set; } = DateTime.Now;
+    public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
     
-    public DateTime? UpdatedAt { get; set; } = DateTime.Now;
+    public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
     
     public DateTime? DeletedAt { get; set; } = null;
 }

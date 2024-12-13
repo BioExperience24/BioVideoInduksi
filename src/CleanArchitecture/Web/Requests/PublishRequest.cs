@@ -11,10 +11,6 @@ public abstract class PublishRequest
     [Required]
     public string PublishType { get; set; }
     
-    public DateTime? StartTime { get; set; } = DateTime.UtcNow;
-    
-    public DateTime? EndTime { get; set; } = DateTime.UtcNow;
-    
     [Required]
     public string Status { get; set; }
     
