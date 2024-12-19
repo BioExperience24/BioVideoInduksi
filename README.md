@@ -39,7 +39,7 @@ This project serves as a template for building a Clean Architecture Web API in A
 
    - Running the project
 
-     ```bash
-     dotnet run ./src/CleanArchitecture/CleanArchitecture.csproj
-     ```
+   ```bash
+   dotnet run ./src/CleanArchitecture/CleanArchitecture.csproj
+   ```
 

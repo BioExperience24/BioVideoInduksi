@@ -13,9 +13,9 @@ public class AuthController(IAuthService userWriteService) : BaseController
     public async Task<IActionResult> SignIn(UserSignInRequest request)
         => Ok(await _userService.SignIn(request));
 
-    [HttpPost("sign-up")]
-    public async Task<IActionResult> SignUp(UserSignUpRequest request, CancellationToken token)
-        => Ok(await _userService.SignUp(request, token));
+    // [HttpPost("sign-up")]
+    // public async Task<IActionResult> SignUp(UserSignUpRequest request, CancellationToken token)
+    //     => Ok(await _userService.SignUp(request, token));
 
     [HttpDelete("logout")]
     public IActionResult Logout()
